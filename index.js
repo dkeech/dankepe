@@ -8,20 +8,26 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(CORS());
 
+const getBrandListQuery = "SELECT brandname from brands"; 
 const getAllBrandsQuery = 'SELECT * FROM brands';
-const getAllCustomersQuery = 'SELECT * FROM customers';
+const getAllCustomersQuery = "SELECT * FROM customers";
+const getAllProductsQuery = "SELECT * FROM products";
+const getAllProductsAndBrandsQuery = "SELECT * FROM products INNER JOIN brands ON products.brandid = brands.brandid";
 const insertBrandQuery = "INSERT INTO brands (`brandname`) VALUES (?)";
 const insertCustomerQuery = "INSERT INTO customers (`firstname`, `lastname`, `email`, `street_address`, `city`, `state`, `zip`) VALUES (?,?,?,?,?,?,?)";
+const getBrandidfromBrands = "SELECT brandid from brands where brandname = ?";
+const insertProductQuery = "INSERT INTO products (`brandid`, `model`, `modelyear`, `price`) VALUES (?,?,?,?)";
 const updateBrandQuery = "UPDATE brands SET brandname=? WHERE brandid=?" ;
 const updateCustomerQuery = "UPDATE customers SET firstname=?, lastname=?, email=?, street_address=?, city=?, state=?, zip=? WHERE customerid=? ";
 const deleteBrandQuery= "DELETE FROM brands WHERE brandid=?";
 const deleteCustomerQuery= "DELETE FROM customers WHERE customerid=?";
+const deleteProduct= "DELETE FROM products WHERE productid=?";
 const dropTableBrandsQuery = "DROP TABLE IF EXISTS brands";
 const dropTableCustomersQuery = "DROP TABLE IF EXISTS customers";
+const dropTableProductsQuery = "DROP TABLE IF EXISTS products";
 const makeBrandsTableQuery= "CREATE TABLE brands(brandid INT AUTO_INCREMENT NOT NULL, brandname VARCHAR(50) NOT NULL UNIQUE, PRIMARY KEY(brandid));";
 const makeCustomersTableQuery = "CREATE TABLE customers(customerid INT AUTO_INCREMENT, firstname VARCHAR(50) NOT NULL, lastname VARCHAR(50) NOT NULL, email VARCHAR(50) NOT NULL, street_address VARCHAR(50) NOT NULL, city VARCHAR(50) NOT NULL, state VARCHAR(50) NOT NULL, zip VARCHAR(50) NOT NULL, PRIMARY KEY(customerid))";
-
-// Unit of 0 is lbs, unit of 1 is kg
+const makeProductsTableQuery = "CREATE TABLE products (productid INT AUTO_INCREMENT, brandid INT, model VARCHAR(50) NOT NULL, modelyear INT NOT NULL, price DECIMAL(7,2), PRIMARY KEY(productid), CONSTRAINT fk_brand FOREIGN KEY (brandid) REFERENCES brands (brandid));"; 
 
 
 const GetTable = (res) => {
@@ -46,6 +52,17 @@ const GetBrands = (res) => {
 
 const GetCustomers = (res) => {
   mysql.pool.query(getAllCustomersQuery, (err, rows, fields) => {
+    if(err){
+      next(err);
+      return;
+    }
+    res.json({rows: rows});
+  })
+}
+
+
+const GetProducts = (res) => {
+  mysql.pool.query(getAllProductsAndBrandsQuery, (err, rows, fields) => {
     if(err){
       next(err);
       return;
@@ -87,6 +104,26 @@ app.get('/customers',function(req,res,next){
   });
 });
 
+app.get('/products',function(req,res,next){
+  mysql.pool.query(getAllProductsAndBrandsQuery, (err, rows, fields) => {
+    if(err){
+      next(err);
+      return;
+    }
+    res.json({rows: rows});
+  })
+});
+
+app.get('/products-get',function(req,res,next){
+  mysql.pool.query(getBrandListQuery, (err, rows, fields) => {
+    if(err){
+      next(err);
+      return;
+    }
+    res.json({rows: rows});
+  })
+});
+
 
 app.post('/',function(req,res,next){
   var {name, reps, weight, unit, date} = req.body;
@@ -118,6 +155,23 @@ app.post('/customers',function(req,res,next){
       return;
     }
     GetCustomers(res);
+  });
+});
+
+app.post('/products',function(req,res,next){
+  var {productid, brandname, model, modelyear, price} = req.body;
+  returned_id = mysql.pool.query(getBrandidfromBrands, [brandid], (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+      mysql.pool.query(insertProductQuery, [productid, returned_id, model, modelyear, price], (err, result) => {
+      if(err){
+        next(err);
+        return;
+      }
+      GetProducts(res);
+    });
   });
 });
 
@@ -155,6 +209,16 @@ app.delete('/customers',function(req,res,next){
   });
 });
 
+app.delete('/products',function(req,res,next){
+  var {customerid} = req.body;
+  mysql.pool.query(deleteProductQuery, [productid], (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+    GetCustomers(res);
+  });
+});
 
 ///simple-update
 app.put('/',function(req,res,next){
@@ -216,6 +280,14 @@ app.get('/customers/reset-customers',function(req,res,next){
   mysql.pool.query(dropTableCustomersQuery, function(err){
     mysql.pool.query(makeCustomersTableQuery, function(err){
       res.send("customers table reset to default");
+    })
+  });
+});
+
+app.get('/products/reset-products',function(req,res,next){
+  mysql.pool.query(dropTableProductsQuery, function(err){
+    mysql.pool.query(makeProductsTableQuery, function(err){
+      res.send("products table reset to default");
     })
   });
 });

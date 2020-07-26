@@ -46,16 +46,11 @@
 <form class="row">
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="inputYear">Year</label>
-    <input type="text" class="form-control" id="inputYear"  placeholder="Enter year">
+    <input type="number" class="form-control" id="inputYear"  placeholder="Enter year">
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="brand">Brand</label>
-    <select class="form-control" id="exampleFormControlSelect1">
-      <option>Honda</option>
-      <option>BMW</option>
-      <option>Ducati</option>
-      <option>Kawasaki</option>
-      <option>Suzuki</option>
+    <select class="form-control" id="inputBrandName">
     </select>
   </div>
 
@@ -65,35 +60,17 @@
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="inputPrice">Price</label>
-    <input type="number" step="0.01" min="0"  class="form-control" id="inputPrice"  placeholder="Enter price">
+    <input type="number" step="100" min="0"  class="form-control" id="inputPrice"  placeholder="Enter price">
   </div>
 
   <div class="form-group col-sm-6">
     <label for="exampleFormControlTextarea1">Notes</label>
     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
   </div>
-  <div class="form-group col-sm-12"><button type="submit" class="btn btn-primary">Add to Inventory</button></div>
+  <div class="form-group col-sm-12"><button id="new_data" type="submit" class="btn btn-primary">Add to Inventory</button></div>
   
 </form>
-<div class="row">
-  <table>
-    <tr >
-      <th >Year</th>
-      <th >Brand</th>
-      <th >Model</th>
-      <th >Price</th><th></th>
-    </tr>
-    <tr>
-      <td >2020 </td>
-      <td >Honda</td>
-      <td >CBR650F</td>
-      <td >$8,749</td>
-      
-      <td><button type="submit" class="btn btn-primary">Delete</button></td>
-    </tr>
-  </table>
-</div>
-</div>
+
 <!-- end form element  -->
     <!-- Bootstrap JS & JQ files -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
