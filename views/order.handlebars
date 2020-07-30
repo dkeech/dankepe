@@ -1,0 +1,91 @@
+<div class="container">
+  <h1>Create an Order</h1>
+<form class="row">
+  <div class="form-group col-sm-12">
+    <label for="date">Date</label>
+    <input style="max-width: 200px;" type="date" class="form-control" id="inputDate"  placeholder="Date">
+  </div>
+  <div class="form-group col-sm-6 col-md-4 col-lg-3">
+    <label for="customer">Customer</label>
+    <select class="form-control" id="exampleFormControlSelect1">
+      <option>Jerry</option>
+      <option>Larry</option>
+      <option>Mary</option>
+      <option>Harry</option>
+      <option>Gary</option>
+    </select>
+  </div>
+  <div class="form-group col-sm-6 col-md-4 col-lg-3">
+    <label for="brand">Brand</label>
+    <select class="form-control" id="selectBrand">
+      <option>Honda</option>
+      <option>BMW</option>
+      <option>Ducati</option>
+      <option>Kawasaki</option>
+      <option>Suzuki</option>
+    </select>
+  </div>
+  <div class="form-group col-sm-6 col-md-4 col-lg-3">
+    <label for="model">Model</label>
+    <select class="form-control" id="selectModel">
+      <option>CBR600</option>
+      <option>Gold Wing</option>
+      <option>Africa Twin</option>
+      <option>NC750X</option>
+      <option>CB650R</option>
+    </select>
+  </div>
+  <div class="form-group col-sm-6">
+    <label for="exampleFormControlTextarea1">Notes</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+  <div class="form-group col-sm-12"><button type="submit" class="btn btn-primary">Add to Order</button></div>
+  
+</form>
+<div class="row">
+  <table>
+    <tr>
+      <th>Date:</th>
+      <td>7/16/2020</td>
+      <th>Name:</th><td>Jerry Jerrson</td>
+    </tr>
+    <tr >
+      
+      <th >Brand</th>
+      <th >Model</th>
+      <th >Price</th><th></th><th></th>
+    </tr>
+    <tr>
+      
+      <td > 
+        <select class="form-control" id="selectBrand">
+          <option value="Honda" selected>Honda</option>
+          <option value="BMW">BMW</option>
+          <option value="Ducati">Ducati</option>
+          <option value="Kawasaki">Kawasaki</option>
+          <option value="Suzuki">Suzuki</option>
+        </select>
+      </td>
+      <td>    <select class="form-control" id="selectModel">
+      <option>CBR600</option>
+      <option>Gold Wing</option>
+      <option>Africa Twin</option>
+      <option>NC750X</option>
+      <option>CB650R</option>
+    </select></td>
+      <td>$8,749</td>
+      <td><button type="submit" class="btn btn-primary">Update</button></td>
+      <td><button type="submit" class="btn btn-primary">Delete</button></td>
+    </tr>
+ 
+    <tr>
+      <td colspan="3" class="bold">Tax</td>
+      <td class="money">$962.39</td>
+    </tr>
+    <tr>
+      <td colspan="3" class="bold">Total</td>
+      <td class="money">$9,711.39</td>
+    </tr>
+  </table>
+</div>
+</div>
