@@ -9,5 +9,22 @@
 
   <div class="form-group col-sm-12">
     <button type="submit" id="new_data" class="btn btn-primary">Add to Brands</button></div>
-    
+
+
 </form>
+
+<table>
+    <thead> 
+        <th>Brand</th> 
+        
+    </thead> 
+    <tbody>
+        {{#each brands}} 
+        <tr> 
+            <td>{{brandname}}</td> 
+           
+            <td><button class="btn btn-primary" onclick="deleteBrand({{brandid}})">Delete</button></td>
+            
+        </tr> 
+        {{/each}} 
+    </tbody> 
