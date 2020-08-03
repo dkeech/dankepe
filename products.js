@@ -2,30 +2,45 @@ module.exports = function(){
     var express = require('express');
     var router = express.Router();
 
-    function serveProducts(req, res){
-        console.log("Serving up the products")
-        var query = 'SELECT p.productid, p.modelyear, b.brandname, p.model, p.price, p.quantity ' + 
-        'FROM products p ' +
-        'JOIN brands b';
-        var mysql = req.app.get('mysql');
-        var context = {};
-
-        function handleRenderingOfProducts(error, results, fields){
-          console.log(error)
-          console.log(results)
-          // console.log(fields)
-          //take the results of that query and store it inside context
-          context.products = results;
-          context.title = 'Products';
-          context.jsscripts = ['deleteproduct.js', 'selectedproduct.js'];
-          //pass it to handlebars to put inside a file
-          res.render('products', context)
+    function getBrands(res, mysql, context, complete){
+      mysql.pool.query('SELECT brandid, brandname FROM brands', function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
         }
-        //execute the sql query
-        mysql.pool.query(query, handleRenderingOfProducts)
+        context.brands = results;
+        complete();
+      });
+    }
 
-      }
+    function getProducts(res, mysql, context, complete){
+      mysql.pool.query('SELECT p.productid, p.modelyear, b.brandname, p.model, p.price, p.quantity ' + 
+      'FROM products p JOIN brands b', function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.products = results;
+        complete();
+      })
+    }
 
-    router.get('/', serveProducts);
+      router.get('/', function(req, res){
+        var callbackCount = 0;
+        var context = {};
+        context.jsscripts = ['deleteproduct.js', 'selectedproduct.js'];
+        context.title = "Products"
+        var mysql = req.app.get('mysql');
+        getBrands(res, mysql, context, complete);
+        getProducts(res, mysql, context, complete);
+        
+        function complete(){
+          callbackCount ++;
+          if(callbackCount >= 2){
+            res.render('products', context);
+          }
+        }
+        
+      });
     return router;
 }();

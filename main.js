@@ -22,6 +22,7 @@ app.use('/brands', require('./brands.js'));
 app.use('/customers', require('./customers.js'));
 app.use('/products', require('./products.js'));
 app.use('/invoices', require('./invoices.js'));
+app.use('/order', require('./order.js'));
 
 app.use('/', express.static('public'));
 

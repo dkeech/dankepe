@@ -8,7 +8,9 @@
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="brand">Brand</label>
     <select class="form-control" id="inputBrandName">
-      
+      {{#each brands}}
+      <option value="{{brandid}}">{{brandname}}</option>
+      {{/each}}
     </select>
   </div>
 
