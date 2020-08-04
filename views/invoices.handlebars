@@ -2,41 +2,45 @@
     <h1>Orders</h1>
     <table>
         <tr>
-          <th colspan="2" style="color: red";>Add a search by date or customer filter</th>
+          <form class="form-group" id='search_people' action='' method=''>
+          <!--- this form does not submit directly, the button handles all the interaction with backend -->
+              <label> Search for orders by last name:</label>
+              <input id='search_string' class="form-control" type='text' name='search_string' value=''>
+              <input type="button" class="btn btn-primary" value="Search" onclick="searchOrdersByName()">
+          </form>
           <td>&nbsp;</td>
         </tr>
-
-    {{#each invoices}}
         <tr >
           <th>Order #</th>
           <th>Name</th>
           <th>Total</th>
         </tr>
+    {{#each invoices}}
         <tr>
           <td>{{orderid}}</td>
-          <td  style="white-space: nowrap;">{{firstname}} {{lastname}} </td>
+          <td  >{{firstname}} {{lastname}} </td>
           <td  class="money">{{price}}</td>
           
           <td><button type="submit" class="btn btn-primary">Delete</button></td>
-          <!-- Button trigger modal -->
-<td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderModal">
- View Order
-</button></td>
+                    <!-- Button trigger modal -->
+          <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderModal{{orderid}}">
+          View Order
+          </button></td>
 
 <!-- Modal -->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="orderModal{{orderid}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="orderModalLabel">#123 Jerry Jerrson</h5>
+        <h5 class="modal-title" id="orderModalLabel">{{orderid}} {{firstname}} {{lastname}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <p>{{modelyear}} {{brandname}} {{model}} {{price}}</p>
-        <p>Tax: <script>document.write(({{price}} * .09).toFixed(2))</script></p>
-        <p>Total: <script>document.write(({{price}} + {{price}} * .09).toFixed(2))</script></p>
+        <p>Tax: {{tax}}</p>
+        <p>Total: {{total}}</script></p>
         
       </div>
       <div class="modal-footer">
@@ -49,63 +53,11 @@
         </tr>
 
         {{/each}}
-        {{!-- <tr>
-          <td>123</td><td  style="white-space: nowrap;">Mark Mann </td>
-          
-          
-          <td  class="money">$8,121.00</td>
-          
-          <td><button type="submit" class="btn btn-primary">Delete</button></td>
-        </tr>
-        <tr>
-          <td>123</td><td  style="white-space: nowrap;">Linda Iacoboni </td>
-          
-          
-          <td  class="money">$15,996.00</td>
-          
-          <td><button type="submit" class="btn btn-primary">Delete</button></td>
-        </tr>
-        <tr>
-          <td>123</td><td  style="white-space: nowrap;">Craig Edie </td>
-          
-          
-          <td  class="money">$12,247.00</td>
-          
-          <td><button type="submit" class="btn btn-primary">Delete</button></td>
-        </tr>
-        <tr>
-          <td>123</td><td  style="white-space: nowrap;">Gib Wallis </td>
-          
-          
-          <td  class="money">$5,445.00</td>
-          
-          <td><button type="submit" class="btn btn-primary">Delete</button></td>
-        </tr>
-        <tr>
-          <td>123</td><td  style="white-space: nowrap;">David Galbraith </td>
-          
-          
-          <td  class="money">$11,771.00</td>
-          
-          <td><button type="submit" class="btn btn-primary">Delete</button></td>
-        </tr>
-        <tr>
-          <td>123</td><td  style="white-space: nowrap;">Sandra Yadegar </td>
-          
-          
-          <td  class="money">$10,313.00</td>
-          
-          <td><button type="submit" class="btn btn-primary">Delete</button></td>
-        </tr>
-        <tr>
-          <td>123</td><td  style="white-space: nowrap;">Susanne Amidon </td>
-          
-          
-          <td  class="money">$18,222.00</td>
-          
-          <td><button type="submit" class="btn btn-primary">Delete</button></td>
-        </tr>
-        
-      </table>
-    
-</div> --}}
+        <script>
+          function searchOrdersByName() {
+          console.log("searchOrdersByName()");
+          var search_string  = document.getElementById('search_string').value
+          //construct the URL and redirect to it
+          window.location = '/invoices/search/' + encodeURI(search_string)
+}
+        </script>

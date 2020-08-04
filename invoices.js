@@ -2,35 +2,92 @@ module.exports = function(){
     var express = require('express');
     var router = express.Router();
 
-    function serveInvoices(req, res){
-        console.log("Serving up the invoices")
-        var query = 'select o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, p.price ' +
-        'from orders o ' + 
-        'join orders_products op on op.orderid = o.orderid ' + 
-        'join products p on op.productid = p.productid ' +
-        'join brands b on p.brandid = b.brandid ' +
-        'join customers c on c.customerid = o.customerid'
-        
-        var mysql = req.app.get('mysql');
-        var context = {};
+    var invoicesQuery = 'SELECT o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, p.price, o.tax, o.total ' + 
+      'FROM orders o ' + 
+      'JOIN orders_products op ON op.orderid = o.orderid ' + 
+      'JOIN products p on op.productid = p.productid ' + 
+      'JOIN brands b on p.brandid = b.brandid ' + 
+      'JOIN customers c on c.customerid = o.customerid';
 
-        function handleRenderingOfInvoices(error, results, fields){
-          console.log(error)
-          console.log(results)
-          console.log(fields)
-          //take the results of that query and store it inside context
-          context.invoices = results;
-          context.title = 'Orders';
-          context.jsscripts = ['deleteinvoice.js', 'selectedinvoice.js'];
-          //pass it to handlebars to put inside a file
-          res.render('invoices', context)
+    function getInvoices(res, mysql, context, complete){
+      mysql.pool.query(invoicesQuery, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
         }
-        //execute the sql query
-        mysql.pool.query(query, handleRenderingOfInvoices)
-
-        //res.send('Here you go!');
+        context.invoices = results;
+        console.log("end of getInvoices");
+        complete();
+      })
     }
 
-    router.get('/', serveInvoices);
+    function getCustomers(res, mysql, context, complete){
+      mysql.pool.query('SELECT * FROM customers', function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.customers = results;
+      });
+    }
+
+
+    function getOrdersByCustomerName(req, res, mysql, context, complete){
+      var string = req.params.s;
+      var query = 'SELECT o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, p.price, o.tax, o.total ' + 
+        'FROM orders o ' + 
+        'JOIN orders_products op ON op.orderid = o.orderid ' + 
+        'JOIN products p on op.productid = p.productid ' + 
+        'JOIN brands b on p.brandid = b.brandid ' + 
+        'JOIN customers c on c.customerid = o.customerid ' + 
+        'WHERE c.firstname LIKE ' + mysql.pool.escape(string + "%") +  ' OR c.lastname LIKE ' + mysql.pool.escape(string + "%");
+      console.log(query);
+
+      mysql.pool.query(query, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.invoices = results;
+        complete();
+      })
+    }
+
+    router.get('/', function(req, res){
+      console.log("rendering invoices");
+      var callbackCount = 0;
+      console.log("callbackCount is " + callbackCount)
+      var context = {};
+      context.jsscripts = ['searchorders.js'];
+      var mysql = req.app.get('mysql');
+      getInvoices(res, mysql, context, complete);
+      
+      function complete(){
+        
+        callbackCount ++;
+        console.log(callbackCount);
+        if(callbackCount >=1){
+        res.render('invoices', context)
+        }
+      }
+    });
+
+    router.get('/search/:s', function(req, res){
+      var callbackCount = 0;
+      var context = {};
+      context.jsscripts = ['searchorders.js'];
+      var mysql = req.app.get('mysql');
+      getOrdersByCustomerName(req, res, mysql, context, complete);
+      function complete(){
+        
+        callbackCount ++;
+        console.log(callbackCount)
+        if(callbackCount >= 1){
+          res.render('invoices', context);
+        }
+      }
+    })
+
+    
     return router;
 }();
