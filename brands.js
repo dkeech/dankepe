@@ -26,5 +26,48 @@ module.exports = function(){
     }
 
     router.get('/', serveBrands);
-    return router;
+    
+
+    // Route to add a new brand to the list
+    router.post('/', function(req, res){
+      console.log(req.body)
+      var mysql = req.app.get('mysql');
+      var sql = "INSERT INTO brands (brandname) VALUES (?)";
+      var inserts = [req.body.brandname];
+      sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+          if(error){
+              console.log(JSON.stringify(error))
+              res.write(JSON.stringify(error));
+              res.end();
+          }else{
+              res.redirect('brands');
+          }
+      });
+  });
+
+  //route to delete a brand
+
+  router.delete('/:brandid', function(req, res){
+    var mysql = req.app.get('mysql');
+    var sql = "DELETE FROM brands WHERE brandid= ?";
+    var inserts = [req.params.brandid];
+    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+            console.log(error)
+            res.write(JSON.stringify(error));
+            res.status(400);
+            res.end();
+        }else{
+            res.status(202).end();
+        }
+    })
+})
+
+return router;
+
 }();
+
+
+    
+    
+
