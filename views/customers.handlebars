@@ -53,6 +53,8 @@
       <td>{{zip}}</td>
       <td>{{phone}}</td>
       <td>{{email}}</td>
+      <td><button class="btn btn-primary" onclick="deleteCustomer({{customerid}})">Delete</button></td>
+      <td><a href="/customers/{{customerid}}">Update</a></td>
     </tr>
     {{/each}}
   </table>

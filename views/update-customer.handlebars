@@ -1,10 +1,17 @@
 <html>
 <h1>Update {{customer.firstname}} {{customer.lastname}}:</h1>
-<form id="update-customer" action="/customers" method="post">
-    First name: <input type="text" name="firstname" value="{{person.fname}}"><br>
-    Last name: <input type="text" name="lastname" value="{{person.lname}}"><br>
+<form id="update-customer" action="/customers" method="put">
+    First name: <input type="text" name="firstname" value="{{customer.firstname}}"><br>
+    Last name: <input type="text" name="lastname" value="{{customer.lastname}}"><br>
+    Email: <input type="email" name="email" value="{{customer.email}}"><br>
+    Street Address: <input type="text" name="street_address" value="{{customer.street_address}}"><br>
+    City: <input type="text" name="city" value="{{customer.city}}"><br>
+    State: <input type="text" name="state" value="{{customer.state}}"><br>
+    Zip: <input type="text" name="zip" value="{{customer.zip}}"><br>
+
+    <button onclick="updateCustomer({{customer.customerid}})">Update</button>
    
 </form>
-<button onclick="updateCustomer({{customer.customerid}})">Update</button>
+
 
 </html>

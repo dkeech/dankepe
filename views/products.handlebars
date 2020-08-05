@@ -1,13 +1,13 @@
 <div class="container">
   <h1>Add a Product</h1>
-<form class="row">
+<form class="row" action="/products" method="POST">
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="inputYear">Year</label>
-    <input type="number" class="form-control" id="inputYear"  placeholder="Enter year">
+    <input type="number" class="form-control" id="inputYear" name="modelyear" placeholder="Enter year">
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="brand">Brand</label>
-    <select class="form-control" id="inputBrandName">
+    <select class="form-control" id="inputBrandName" name="brandid">
       {{#each brands}}
       <option value="{{brandid}}">{{brandname}}</option>
       {{/each}}
@@ -16,11 +16,16 @@
 
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="inputModel">Model</label>
-    <input type="text" class="form-control" id="inputModel"  placeholder="Enter model">
+    <input type="text" class="form-control" id="inputModel" name="model"  placeholder="Enter model">
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="inputPrice">Price</label>
-    <input type="number" step="100" min="0"  class="form-control" id="inputPrice"  placeholder="Enter price">
+    <input type="number" min="0" step=".01" class="form-control" id="inputPrice" name="price"  placeholder="Enter price">
+  </div>
+
+  <div class="form-group col-sm-2 col-md-2 col-lg-2">
+    <label for="inputQuantity">Quantity</label>
+    <input type="number" step="1" min="1"  class="form-control" id="inputQuantity" name="quantity"  placeholder="Quantity">
   </div>
 
   <div class="form-group col-sm-6">
