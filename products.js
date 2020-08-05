@@ -14,8 +14,7 @@ module.exports = function(){
     }
 
     function getProducts(res, mysql, context, complete){
-      mysql.pool.query('SELECT p.productid, p.modelyear, b.brandname, p.model, p.price, p.quantity ' + 
-      'FROM products p JOIN brands b', function(error, results, fields){
+      mysql.pool.query('SELECT * FROM products INNER JOIN brands ON products.brandid = brands.brandid', function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
           res.end();
@@ -42,5 +41,25 @@ module.exports = function(){
         }
         
       });
+
+    
+
+      router.post('/', function(req, res){
+        console.log(req.body)
+        var mysql = req.app.get('mysql');
+        var sql = "INSERT INTO products (`brandid`, `model`, `modelyear`, `price`, `quantity`) VALUES (?,?,?,?,?)";
+        var inserts = [req.body.brandid, req.body.model, req.body.modelyear, req.body.price, req.body.quantity];
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(JSON.stringify(error))
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.redirect('/products');
+            }
+        });
+    });
+
+
     return router;
 }();

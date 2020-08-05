@@ -15,7 +15,7 @@ module.exports = function(){
           //take the results of that query and store it inside context
           context.brands = results;
           context.title = 'Brands';
-          context.jsscripts = ['deletebrand.js', 'selectedbrand.js'];
+          context.jsscripts = ['selectedbrand.js'];
           //pass it to handlebars to put inside a file
           res.render('brands', context)
         }
@@ -45,23 +45,6 @@ module.exports = function(){
       });
   });
 
-  //route to delete a brand
-
-  router.delete('/:brandid', function(req, res){
-    var mysql = req.app.get('mysql');
-    var sql = "DELETE FROM brands WHERE brandid= ?";
-    var inserts = [req.params.brandid];
-    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-        if(error){
-            console.log(error)
-            res.write(JSON.stringify(error));
-            res.status(400);
-            res.end();
-        }else{
-            res.status(202).end();
-        }
-    })
-})
 
 return router;
 
