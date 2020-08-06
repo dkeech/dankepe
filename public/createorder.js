@@ -7,13 +7,13 @@ const order = require("../order");
 //     alert(order_number)
 //     window.location = '/order/' + order_number
 // }
-var rowNumber = 2;
+var rowNumber;
 console.log(`rowNumber is ${rowNumber}`);
 let lineNumber = 0;
 var customer_context = [];
 
 function startOrder(){
-    
+    rowNumber = 2;
     var order_number = document.querySelector('#order_number').value;
     var date = document.querySelector('#dateSelect').value;
     var customer_name = document.querySelector('#nameSelect').value;
@@ -22,8 +22,14 @@ function startOrder(){
     document.querySelector('#orderDate').innerHTML = date;
     customer_context = [order_number, date, customer_name];
     document.querySelector('#startButton').classList.add('hidden');
+    document.querySelector('#staticFields').classList.add('hidden');
     document.querySelector('#addButton').classList.remove('hidden');
+    document.querySelector('#submitButton').classList.remove('hidden');
+    document.querySelector('#addFields').classList.remove('hidden');
+    document.querySelector('#notesField').classList.remove('hidden');
+    document.querySelector('#orderInstructions').classList.add('hidden');
 }
+
 
 function addToOrder(){
     console.log(`inner rowNumber is ${rowNumber}`);

@@ -1,12 +1,13 @@
 <div class="container">
   <h1>Create an Order</h1>
- <p>Select Date and Customer and press "Begin Order".</p>
+ <p id="orderInstructions" class="showHide">Select Date and Customer and press "Begin Order".</p>
  <input id="order_number" value="{{next_order}}" class="hidden"></input>
 <form id="addOrder" >
-  <div class="row">
-  <div class="form-group col-sm-6 col-md-4 col-lg-3">
-    <label for="date">Date</label>
-    <input style="max-width: 200px;" type="date" name="date" class="form-control" id="dateSelect"  placeholder="Date">
+  <div class="row showHide" id="staticFields">
+   
+    <div class="form-group col-sm-6 col-md-4 col-lg-3">
+      <label for="date">Date</label>
+      <input style="max-width: 200px;" type="date" name="date" class="form-control" id="dateSelect"  placeholder="Date">
   
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
@@ -20,11 +21,12 @@
     </select>
     
   </div>
-  <div class="form-group col-sm-12"><div id="startButton" onclick="startOrder()" class="btn btn-primary">Begin Order</div></div>
+  <div class="form-group col-sm-12"><div id="startButton" onclick="startOrder()" class="showHide btn btn-primary">Begin Order</div></div>
   </div>
-  <p class="mt-4">Select Year, Brand, and Model, add relevant notes, and click "Add to Order."<br>
-  Repeat to add more than one product.</p>
-  <div class="row">
+  
+  <div class="row hidden hideShow" id="addFields">
+    <div class="col-sm-12"><p class="mt-4">Select Year, Brand, and Model, add relevant notes, and click "Add to Order."<br>
+  Repeat to add more than one product.</p></div>
    <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="brand">Year</label>
     <select class="form-control" name="brand" id="selectYear">
@@ -53,12 +55,12 @@
     </select>
   </div>
   </div>
-  <div class="row">
+  <div class="row hidden hideShow" id="notesField">
   <div class="form-group col-sm-6">
     <label for="notesArea">Notes</label>
     <textarea class="form-control" id="notesArea" rows="3"></textarea>
   </div>
-  <div class="form-group col-sm-12"><div id="addButton" type="submit" onclick="addToOrder()" class="hidden btn btn-primary">Add to Order</div></div>
+  <div class="form-group col-sm-12"><div id="addButton" onclick="addToOrder()" class="hidden hideShow btn btn-primary">Add to Order</div></div>
   
 </form>
 </div>
@@ -78,10 +80,8 @@
       <th >Price</th><th></th>
       <th></th>
     </tr>
-    
-     
- 
 
   </table>
+  <div class="form-group col-sm-12"><div id="submitButton" onclick="submitOrder()" class="hidden hideShow btn btn-primary mt-4">Submit Order</div></div>
 </div>
 </div>
