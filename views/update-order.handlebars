@@ -1,0 +1,16 @@
+<html>
+<h1>Update Order Number {{order.orderid}} for {{order.lastname}}, {{order.firstname}}</h1>
+<form id="update-order" action="/invoices" method="put">
+
+    Price: <input type="number" name="price" value="{{order.price}}"><br>
+    Tax: <input type="number" name="tax" value="{{order.tax}}"><br>
+    Total: <input type="number" name="total" value="{{order.total}}"><br>
+    
+
+    <button onclick="updateOrder({{order.orderid}})">Update</button>
+    <button onclick="updateOrdernull({{order.orderid}})">Update and Remove Order from Customer</button>
+   
+</form>
+
+
+</html>
