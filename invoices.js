@@ -21,6 +21,25 @@ module.exports = function(){
       })
     }
 
+    function getInvoice(res, mysql, context, orderid, complete){
+      var sql = 'SELECT o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, p.price, o.tax, o.total ' + 
+      'FROM orders o ' + 
+      'JOIN orders_products op ON op.orderid = o.orderid ' + 
+      'JOIN products p on op.productid = p.productid ' + 
+      'JOIN brands b on p.brandid = b.brandid ' + 
+      'JOIN customers c on c.customerid = o.customerid ' +
+      'WHERE o.orderid = ?';
+      var inserts = [orderid];
+      mysql.pool.query(sql, inserts, function(error, results, fields){
+          if(error){
+              res.write(JSON.stringify(error));
+              res.end();
+          }
+          context.order = results[0];
+          complete();
+      });
+  }
+
     function getCustomers(res, mysql, context, complete){
       mysql.pool.query('SELECT * FROM customers', function(error, results, fields){
         if(error){
@@ -58,7 +77,7 @@ module.exports = function(){
       var callbackCount = 0;
       console.log("callbackCount is " + callbackCount)
       var context = {};
-      context.jsscripts = ['searchorders.js'];
+      context.jsscripts = ['searchorders.js', 'deleteorder.js'];
       var mysql = req.app.get('mysql');
       getInvoices(res, mysql, context, complete);
       
@@ -87,6 +106,81 @@ module.exports = function(){
         }
       }
     })
+
+
+    router.delete('/:orderid', function(req, res){
+      var mysql = req.app.get('mysql');
+      var sql1 = "DELETE FROM orders_products WHERE orderid = ?";
+      var sql2 = "DELETE FROM orders WHERE orderid = ?"
+      var inserts = [req.params.orderid];
+      remove_orders_products = mysql.pool.query(sql1, inserts, function(error, results, fields){
+          if(error){
+              console.log(error)
+              res.write(JSON.stringify(error));
+              res.status(400);
+              res.end();
+          }else{
+            remove_order= mysql.pool.query(sql2, inserts, function(error, results, fields){
+              if(error){
+                  console.log(error)
+                  res.write(JSON.stringify(error));
+                  res.status(400);
+                  res.end();
+              }else{
+                  res.status(202).end();
+              }
+          })
+          }
+      })
+    })
+
+    router.get('/:orderid', function(req, res){
+      callbackCount = 0;
+      var context = {};
+      context.jsscripts = ["updateorder.js"];
+      var mysql = req.app.get('mysql');
+      getInvoice(res, mysql, context, req.params.orderid, complete);
+      function complete(){
+          callbackCount++;
+          if(callbackCount >= 1){
+              res.render('update-order', context);
+          }
+
+      }
+    });
+
+
+    router.put('/:orderid', function(req, res){
+      var mysql = req.app.get('mysql');
+      var inserts = [req.body.price, req.body.tax, req.body.total, req.params.orderid];
+      var sql = "UPDATE orders SET price=?, tax=?, total=? WHERE orderid=?";
+      sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+          if(error){
+              console.log(error)
+              res.write(JSON.stringify(error));
+              res.end();
+          }else{
+              res.status(200);
+              res.end();
+          }
+      });
+    });
+
+    router.put('/null/:orderid', function(req, res){
+      var mysql = req.app.get('mysql');
+      var inserts = [req.body.price, req.body.tax, req.body.total, req.params.orderid];
+      var sql = 'UPDATE orders SET customerid="NULL", price=?, tax=?, total=? WHERE orderid=?';
+      sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+          if(error){
+              console.log(error)
+              res.write(JSON.stringify(error));
+              res.end();
+          }else{
+              res.status(200);
+              res.end();
+          }
+      });
+    });
 
     
     return router;
