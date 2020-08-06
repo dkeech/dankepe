@@ -1,4 +1,5 @@
-form {padding: 50px 0}
+form {padding: 20px 0 50px}
 th, td {padding: 5px 10px 5px 25px;}
 .container {margin: 50px auto;}
 #search_string {max-width: 200px; display: inline; margin: 10px; }
+.hidden {display: none;}
