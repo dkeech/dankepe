@@ -25,7 +25,7 @@ module.exports = function(){
     }
 
     function getYears(res, mysql, context, complete){
-      mysql.pool.query('SELECT modelyear FROM products', function(error, results, fields){
+      mysql.pool.query('SELECT DISTINCT modelyear FROM products', function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
           res.end();
@@ -103,19 +103,12 @@ module.exports = function(){
     router.post('/', function(req, res){
       var callbackCount = 0;
       var context = {};
-      context.jsscripts = [];
+      context.jsscripts = ['createorder.js'];
       var mysql = req.app.get('mysql');
-      getCustomers(res, mysql, context, complete);
-      getBrands(res, mysql, context, complete);
-      getModels(res, mysql, context, complete);
-      // getOrder(res, mysql, context, complete);
-      function complete(){
-        callbackCount ++;
-        if(callbackCount >= 4){
-          res.render('order', context);
-        }
-      }
-    });
+      var sql = 'INSERT INTO orders (customerid, date, price, tax, total) VALUES (?,?,?,?)'
+      var inserts = []
+        });
+      
 
    
     return router;
