@@ -1,91 +1,87 @@
 <div class="container">
   <h1>Create an Order</h1>
-<form class="row">
-  <div class="form-group col-sm-12">
+ <p>Select Date and Customer and press "Begin Order".</p>
+ <input id="order_number" value="{{next_order}}" class="hidden"></input>
+<form id="addOrder" >
+  <div class="row">
+  <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="date">Date</label>
-    <input style="max-width: 200px;" type="date" class="form-control" id="inputDate"  placeholder="Date">
+    <input style="max-width: 200px;" type="date" name="date" class="form-control" id="dateSelect"  placeholder="Date">
+  
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="customer">Customer</label>
-    <select class="form-control" id="exampleFormControlSelect1">
-      <option>Jerry</option>
-      <option>Larry</option>
-      <option>Mary</option>
-      <option>Harry</option>
-      <option>Gary</option>
+    <select class="form-control" id="nameSelect">
+      <option name="NULL">Select Customer</option>
+      {{#each customers}}
+      <option name="customerid" >{{firstname}} {{lastname}}</option>
+      {{/each}}
+      
+    </select>
+    
+  </div>
+  <div class="form-group col-sm-12"><div  onclick="startOrder()" class="btn btn-primary">Begin Order</div></div>
+  </div>
+  <p class="mt-4">Select Year, Brand, and Model, add relevant notes, and click "Add to Order."<br>
+  Repeat to add more than one product.</p>
+  <div class="row">
+   <div class="form-group col-sm-6 col-md-4 col-lg-3">
+    <label for="brand">Year</label>
+    <select class="form-control" name="brand" id="selectYear">
+      <option >Select Year</option>
+      {{#each years}}
+      <option name="{{modelyear}}">{{modelyear}}</option>
+      {{/each}}
     </select>
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="brand">Brand</label>
-    <select class="form-control" id="selectBrand">
-      <option>Honda</option>
-      <option>BMW</option>
-      <option>Ducati</option>
-      <option>Kawasaki</option>
-      <option>Suzuki</option>
+    <select class="form-control" name="brand" id="selectBrand">
+      <option >Select Brand</option>
+      {{#each brands}}
+      <option name="{{brandid}}">{{brandname}}</option>
+      {{/each}}
     </select>
   </div>
   <div class="form-group col-sm-6 col-md-4 col-lg-3">
     <label for="model">Model</label>
-    <select class="form-control" id="selectModel">
-      <option>CBR600</option>
-      <option>Gold Wing</option>
-      <option>Africa Twin</option>
-      <option>NC750X</option>
-      <option>CB650R</option>
+    <select class="form-control" name="model" id="selectModel">
+      <option>Select Model</option>
+      {{#each models}}
+      <option name="{{model}}" data-price="{{price}}">{{model}}</option>
+      {{/each}}
     </select>
   </div>
-  <div class="form-group col-sm-6">
-    <label for="exampleFormControlTextarea1">Notes</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
   </div>
-  <div class="form-group col-sm-12"><button type="submit" class="btn btn-primary">Add to Order</button></div>
+  <div class="row">
+  <div class="form-group col-sm-6">
+    <label for="notesArea">Notes</label>
+    <textarea class="form-control" id="notesArea" rows="3"></textarea>
+  </div>
+  <div class="form-group col-sm-12"><div type="submit" onclick="addToOrder()" class="btn btn-primary">Add to Order</div></div>
   
 </form>
+</div>
 <div class="row">
-  <table>
+  <table id="orderTable">
     <tr>
+      <th>Order #:</th><td id="orderNumber"></td>
       <th>Date:</th>
-      <td>7/16/2020</td>
-      <th>Name:</th><td>Jerry Jerrson</td>
+      <td id="orderDate"></td>
+      <th>Name:</th><td id="customerName"></td>
+      
     </tr>
     <tr >
-      
+      <th>Year</th>
       <th >Brand</th>
       <th >Model</th>
-      <th >Price</th><th></th><th></th>
+      <th >Price</th><th></th>
+      <th></th>
     </tr>
-    <tr>
-      
-      <td > 
-        <select class="form-control" id="selectBrand">
-          <option value="Honda" selected>Honda</option>
-          <option value="BMW">BMW</option>
-          <option value="Ducati">Ducati</option>
-          <option value="Kawasaki">Kawasaki</option>
-          <option value="Suzuki">Suzuki</option>
-        </select>
-      </td>
-      <td>    <select class="form-control" id="selectModel">
-      <option>CBR600</option>
-      <option>Gold Wing</option>
-      <option>Africa Twin</option>
-      <option>NC750X</option>
-      <option>CB650R</option>
-    </select></td>
-      <td>$8,749</td>
-      <td><button type="submit" class="btn btn-primary">Update</button></td>
-      <td><button type="submit" class="btn btn-primary">Delete</button></td>
-    </tr>
+    
+     
  
-    <tr>
-      <td colspan="3" class="bold">Tax</td>
-      <td class="money">$962.39</td>
-    </tr>
-    <tr>
-      <td colspan="3" class="bold">Total</td>
-      <td class="money">$9,711.39</td>
-    </tr>
+
   </table>
 </div>
 </div>
