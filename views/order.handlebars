@@ -20,7 +20,7 @@
     </select>
     
   </div>
-  <div class="form-group col-sm-12"><div  onclick="startOrder()" class="btn btn-primary">Begin Order</div></div>
+  <div class="form-group col-sm-12"><div id="startButton" onclick="startOrder()" class="btn btn-primary">Begin Order</div></div>
   </div>
   <p class="mt-4">Select Year, Brand, and Model, add relevant notes, and click "Add to Order."<br>
   Repeat to add more than one product.</p>
@@ -58,7 +58,7 @@
     <label for="notesArea">Notes</label>
     <textarea class="form-control" id="notesArea" rows="3"></textarea>
   </div>
-  <div class="form-group col-sm-12"><div type="submit" onclick="addToOrder()" class="btn btn-primary">Add to Order</div></div>
+  <div class="form-group col-sm-12"><div id="addButton" type="submit" onclick="addToOrder()" class="hidden btn btn-primary">Add to Order</div></div>
   
 </form>
 </div>

@@ -21,6 +21,8 @@ function startOrder(){
     document.querySelector('#customerName').innerHTML = customer_name;
     document.querySelector('#orderDate').innerHTML = date;
     customer_context = [order_number, date, customer_name];
+    document.querySelector('#startButton').classList.add('hidden');
+    document.querySelector('#addButton').classList.remove('hidden');
 }
 
 function addToOrder(){
