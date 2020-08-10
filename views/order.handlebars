@@ -12,10 +12,10 @@
       </div>
       <div class="form-group col-sm-6 col-md-4 col-lg-3">
         <label for="customer">Customer</label>
-        <select class="form-control" id="nameSelect">
+        <select class="form-control" id="nameSelect" onChange="convertToName(this);">
           <option name="NULL">Select Customer</option>
           {{#each customers}}
-            <option name="customerid">{{firstname}} {{lastname}}</option>
+            <option value="{{customerid}}" data-name="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>
           {{/each}}
         </select>
 
@@ -70,14 +70,17 @@
 </div>
 <div class="row">
   <div class="col-sm-8">
+    <form id="submitOrder" action ="/order" method = "POST">
     <table id="orderTable">
       <tr>
         <th>Order #:</th>
-        <td id="orderNumber"></td>
+        <td id="orderNumber" name="order_number" value="7"></td>
         <th>Date:</th>
-        <td id="orderDate"></td>
+        <td id="orderDate" name="order_date" value="7"> </td>
         <th>Name:</th>
-        <td id="customerName"></td>
+        <td id="customerName" name="customer" value="7"> </td>
+        <th>ID:</th>
+        <td id="customerId" name="customerId" value="7"> </td>
       </tr>
       <tr>
         <th>Year</th>
@@ -96,20 +99,20 @@
         <th>Tax:</th>
       </tr>
       <tr>
-        <td id="tax"></td>
+        <td id="tax" name="tax" value="7"></td>
       </tr>
       <tr>
         <th>Total:</th>
       </tr>
       <tr>
-        <td id="total"></td>
+        <td id="total" name="total" value="7"></td>
       </tr>
     </table>
   </div>
 
   <div class="form-group col-sm-12">
-    <div id="submitButton" onclick="submitOrder()" class="hidden hideShow btn btn-primary mt-4">Submit Order</div>
+    <input type="submit" value="Submit Order" id="submitButton" class="hidden hideShow btn btn-primary mt-4">
   </div>
-
+</form>
 </div>
 </div>

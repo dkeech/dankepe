@@ -46,17 +46,6 @@ module.exports = function(){
         complete();
       });
       }
-        
-    // function getOrder(res, mysql, context, complete){
-    //   mysql.pool.query('SELECT TOP 1 orderid, date, name FROM orders ORDER BY orderid DESC', function(error, results, fields){
-    //     if(error){
-    //       res.write(JSON.stringify(error));
-    //       res.end();
-    //     }
-    //     context.thisOrder = results;
-    //     complete();
-    //   })
-    // }
     
     function getNextOrderId(res, mysql, context, complete){
       mysql.pool.query('SELECT orderid FROM orders LIMIT 1', function(error, results, fields){
@@ -101,12 +90,22 @@ module.exports = function(){
     })
 
     router.post('/', function(req, res){
-      var callbackCount = 0;
+      console.log(req.body);
       var context = {};
       context.jsscripts = ['createorder.js'];
       var mysql = req.app.get('mysql');
-      var sql = 'INSERT INTO orders (customerid, date, price, tax, total) VALUES (?,?,?,?)'
-      var inserts = []
+      var sql = 'INSERT INTO orders (customerid, date, price, tax, total) VALUES (?,?,?,?,?)';
+      var inserts = [req.body.customerid, req.body.date, req.body.price, req.body.tax, req.body.total]
+      console.log(inserts);
+      sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+          console.log(JSON.stringify(error));
+          res.write(JSON.stringify(error));
+          res.end();
+        } else {
+          res.redirect('/order')
+        }
+      })
         });
       
 

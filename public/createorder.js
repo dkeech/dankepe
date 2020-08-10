@@ -1,12 +1,5 @@
 const order = require("../order");
 
-// function createOrder() {
-//     //get the first name 
-//     var order_number  = document.getElementById('order_number').value
-//     //construct the URL and redirect to it
-//     alert(order_number)
-//     window.location = '/order/' + order_number
-// }
 var rowNumber;
 console.log(`rowNumber is ${rowNumber}`);
 let lineNumber = 0;
@@ -16,9 +9,12 @@ function startOrder(){
     rowNumber = 2;
     var order_number = document.querySelector('#order_number').value;
     var date = document.querySelector('#dateSelect').value;
-    var customer_name = document.querySelector('#nameSelect').value;
+    var customerid = document.querySelector('#nameSelect').value;
+    // var customer_name = document.querySelector('#nameSelect').value;
+    var customer_name = convertToName(document.querySelector('#nameSelect'));
     document.querySelector('#orderNumber').innerHTML = order_number;
     document.querySelector('#customerName').innerHTML = customer_name;
+    document.querySelector('#customerId').innerHTML = customerid;
     document.querySelector('#orderDate').innerHTML = date;
     customer_context = [order_number, date, customer_name];
     document.querySelector('#startButton').classList.add('hidden');
@@ -32,30 +28,51 @@ function startOrder(){
 
 
 function addToOrder(){
-    console.log(`inner rowNumber is ${rowNumber}`);
     var orderTable = document.querySelector('#orderTable');
     var year = document.querySelector('#selectYear').value;
     var brand = document.querySelector('#selectBrand').value;
     var model = document.querySelector('#selectModel').value;
-    var price = document.querySelector('#selectModel').dataset.price;
+    var price = document.querySelector('#selectModel').selectedOptions[0].dataset.price;
     
     var row = orderTable.insertRow();
     var yearCell = row.insertCell(0);
     var brandCell = row.insertCell(1);
     var modelCell = row.insertCell(2);
     var priceCell = row.insertCell(3);
+    priceCell.classList.add('itemPrice');
     var deleteCell = row.insertCell(4);
     yearCell.innerHTML = year;
     brandCell.innerHTML = brand;
     modelCell.innerHTML = model;
     priceCell.innerHTML = price;
-    deleteCell.innerHTML = `<div class="btn btn-primary" onclick="deleteThisRow(${rowNumber})">Delete</div>`
-    rowNumber ++;
+    priceCell.setAttribute('value', price);
+    deleteCell.innerHTML = `<div class="btn btn-primary" onclick="deleteThisRow(this)">Delete</div>`;
+    
+    (function calculate(){
+        var nodeList = document.querySelectorAll('.itemPrice');
+        var prices = [];
+        for(i of nodeList){
+            prices.push(parseFloat(i.getAttribute('value')));
+        }
+        total = 0;
+        for(i of prices){
+            total += i;
+        }
+        tax = total * .09;
+        total = total + tax;
+        document.querySelector('#tax').innerHTML = tax.toFixed(2);
+        document.querySelector('#total').innerHTML = total.toFixed(2);
+    })();
 }
 
-function deleteThisRow(num){
-    console.log(`num is ${num}`)
-    table = document.querySelector('orderTable');
-    table.deleteRow(num);
+function deleteThisRow(r){
     
+    var i = r.parentNode.parentNode.rowIndex;
+    table = document.querySelector('#orderTable');
+    table.deleteRow(i);
+    
+}
+
+function convertToName(value){
+    return value.options[value.selectedIndex].text;
 }
