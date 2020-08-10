@@ -33,10 +33,11 @@ function startOrder(){
 function addToOrder(){
     var totalPrice = 0;
     var orderTable = document.querySelector('#orderTable');
-    var year = document.querySelector('#selectYear').value;
-    var brand = document.querySelector('#selectBrand').value;
-    var model = document.querySelector('#selectModel').value;
-    var price = document.querySelector('#selectModel').selectedOptions[0].dataset.price;
+    var year = document.querySelector('#p-modelyear').value;
+    var brand = document.querySelector('#p-brandname').value;
+    var model = document.querySelector('#p-model').value;
+    var price = parseFloat(document.querySelector('#p-price').value);//.selectedOptions[0].dataset.price
+    var vehicle = document.querySelector('#selectVehicle').value;
     
     var row = orderTable.insertRow();
     var yearCell = row.insertCell(0);

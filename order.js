@@ -47,6 +47,16 @@ module.exports = function(){
       });
       }
     
+    function getVehicles(res, mysql, context, complete){
+      mysql.pool.query('SELECT p.productid, p.modelyear, b.brandname, p.model, p.price FROM products p INNER JOIN brands b ON p.brandid = b.brandid', function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.vehicles = results;
+      })
+    }
+    
     function getNextOrderId(res, mysql, context, complete){
       mysql.pool.query('SELECT orderid FROM orders LIMIT 1', function(error, results, fields){
         if(error){
@@ -70,6 +80,7 @@ module.exports = function(){
       getModels(res, mysql, context, complete);
       getYears(res, mysql, context, complete);
       getNextOrderId(res, mysql, context, complete);
+      getVehicles(res, mysql, context, complete)
       function complete(){
         callbackCount ++;
         if(callbackCount >= 5){
