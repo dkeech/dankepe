@@ -1,7 +1,7 @@
 <div class="container">
   <h1>Create an Order</h1>
   <p id="orderInstructions" class="showHide">Select Date and Customer and press "Begin Order".</p>
-  <input id="order_number" value="{{next_order}}" class="hidden"></input>
+  <input type="hidden" id="order_number" value="{{next_order}}" class="hidden"></input>
   <form id="addOrder">
     <div class="row showHide" id="staticFields">
 
@@ -76,16 +76,16 @@
         <th>Order #:</th>
         
         <td id="orderNumber" ></td>
-        <input type="hidden" name="order_number" />
+        <input type="hidden" id="order_number_input" type="hidden" name="order_number" />
         <th>Date:</th>
-        <td id="orderDate" name="order_date" > </td>
-        <input type="hidden" name="order_date"/>
+        <td id="orderDate"  > </td>
+        <input type="hidden" id="order_date_input" type="hidden" name="date"/>
         <th>Name:</th>
-        <td id="customerName" name="customer" > </td>
-        <input type="hidden" name="customer">
+        <td id="customerName"  > </td>
+        
         <th>ID:</th>
-        <td id="customerId" name="customerId" > </td>
-        <input type="hidden" name="customerId">
+        <td id="customerId"  > </td>
+        <input type="hidden" id="customer_id_input" type="hidden" name="customerid">
       </tr>
       <tr>
         <th>Year</th>
@@ -104,13 +104,16 @@
         <th>Tax:</th>
       </tr>
       <tr>
-        <td id="tax" name="tax" value="7"></td>
+        <input type="hidden" id="price_input" name="price"/>
+        <td id="tax" name="tax"></td>
+        <input type="hidden" id="tax_input" name="tax"/>
       </tr>
       <tr>
         <th>Total:</th>
       </tr>
       <tr>
-        <td id="total" name="total" value="7"></td>
+        <td id="total" name="total"></td>
+        <input type="hidden" id="total_input" name="total" />
       </tr>
     </table>
   </div>

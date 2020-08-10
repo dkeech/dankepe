@@ -24,10 +24,14 @@ function startOrder(){
     document.querySelector('#addFields').classList.remove('hidden');
     document.querySelector('#notesField').classList.remove('hidden');
     document.querySelector('#orderInstructions').classList.add('hidden');
+    
+    document.getElementById('customer_id_input').value = document.querySelector('#customerId').innerHTML;
+    document.getElementById('order_date_input').value = document.querySelector('#orderDate').innerHTML;
 }
 
 
 function addToOrder(){
+    var totalPrice = 0;
     var orderTable = document.querySelector('#orderTable');
     var year = document.querySelector('#selectYear').value;
     var brand = document.querySelector('#selectBrand').value;
@@ -39,6 +43,7 @@ function addToOrder(){
     var brandCell = row.insertCell(1);
     var modelCell = row.insertCell(2);
     var priceCell = row.insertCell(3);
+    
     priceCell.classList.add('itemPrice');
     var deleteCell = row.insertCell(4);
     yearCell.innerHTML = year;
@@ -58,11 +63,16 @@ function addToOrder(){
         for(i of prices){
             total += i;
         }
+        totalPrice = total;
         tax = total * .09;
         total = total + tax;
         document.querySelector('#tax').innerHTML = tax.toFixed(2);
         document.querySelector('#total').innerHTML = total.toFixed(2);
     })();
+
+    document.getElementById('price_input').value = totalPrice;
+    document.getElementById('tax_input').value = document.querySelector('#tax').innerHTML;
+    document.getElementById('total_input').value = document.querySelector('#total').innerHTML;
 }
 
 function deleteThisRow(r){
