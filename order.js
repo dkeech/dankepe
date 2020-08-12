@@ -54,6 +54,7 @@ module.exports = function(){
           res.end();
         }
         context.vehicles = results;
+        complete();
       })
     }
     
@@ -84,7 +85,7 @@ module.exports = function(){
     }
 
     function postOrderProducts(productid, order_number, res, mysql, context, complete){
-      var sql = `INSERT INTO orders_products(orderid, productid) VALUES (${order_number},${productid}); `
+      var sql = `INSERT INTO orders_products(orderid, productid) VALUES ((SELECT orderid FROM orders WHERE orderid = ${order_number}),${productid}); `
       
       mysql.pool.query(sql, function(error, results, fields){
         if(error){
@@ -105,10 +106,10 @@ module.exports = function(){
       getModels(res, mysql, context, complete);
       getYears(res, mysql, context, complete);
       getNextOrderId(res, mysql, context, complete);
-      getVehicles(res, mysql, context, complete)
+      getVehicles(res, mysql, context, complete);
       function complete(){
         callbackCount ++;
-        if(callbackCount >= 5){
+        if(callbackCount >= 6){
           res.render('order', context);
         }
       }
@@ -132,7 +133,6 @@ module.exports = function(){
       context.jsscripts = ['createorder.js'];
       var mysql = req.app.get('mysql');
       var inserts = [req.body.customerid, req.body.date, req.body.price, req.body.tax, req.body.total];
-      console.log(`inserts: ${inserts}`)
       postOrder(inserts, res, mysql, context, complete);
       
      
@@ -141,9 +141,7 @@ module.exports = function(){
       var order_number = req.body.order_number;
       for(i of arr){
         postOrderProducts(i, order_number, res, mysql, context, complete);
-        console.log(`i is : ${i}`)
       }
-      
       function complete(){
         callbackCount ++;
         if(callbackCount >= callbacks){
@@ -153,7 +151,5 @@ module.exports = function(){
       }    
     });
       
-
-   
     return router;
 }();
