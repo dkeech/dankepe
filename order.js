@@ -58,15 +58,40 @@ module.exports = function(){
     }
     
     function getNextOrderId(res, mysql, context, complete){
-      mysql.pool.query('SELECT orderid FROM orders LIMIT 1', function(error, results, fields){
+      mysql.pool.query('SELECT orderid FROM orders ORDER BY orderid DESC LIMIT 1', function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
           res.end();  
         }
-        next_order = results[0].orderid + 1;
+        if(results.length > 0){
+          next_order = (results[0].orderid + 1);
+        } else {next_order = 1;}
+        
         context.next_order = next_order;
         complete();
         
+      })
+    }
+
+    function postOrder(inserts, res, mysql, context, complete){
+      mysql.pool.query('INSERT INTO orders (customerid, date, price, tax, total) VALUES (?,?,?,?,?); ', inserts, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        } 
+        complete();
+      });
+    }
+
+    function postOrderProducts(productid, order_number, res, mysql, context, complete){
+      var sql = `INSERT INTO orders_products(orderid, productid) VALUES (${order_number},${productid}); `
+      
+      mysql.pool.query(sql, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        complete();
       })
     }
 
@@ -101,23 +126,32 @@ module.exports = function(){
     })
 
     router.post('/', function(req, res){
+      var callbackCount = 0;
       console.log(req.body);
       var context = {};
       context.jsscripts = ['createorder.js'];
       var mysql = req.app.get('mysql');
-      var sql = 'INSERT INTO orders (customerid, date, price, tax, total) VALUES (?,?,?,?,?)';
-      var inserts = [req.body.customerid, req.body.date, req.body.price, req.body.tax, req.body.total]
-      console.log(inserts);
-      sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-        if(error){
-          console.log(JSON.stringify(error));
-          res.write(JSON.stringify(error));
-          res.end();
-        } else {
-          res.redirect('/order')
+      var inserts = [req.body.customerid, req.body.date, req.body.price, req.body.tax, req.body.total];
+      console.log(`inserts: ${inserts}`)
+      postOrder(inserts, res, mysql, context, complete);
+      
+     
+      var arr = JSON.parse(req.body.items_array);
+      var callbacks = arr.length + 1 ;
+      var order_number = req.body.order_number;
+      for(i of arr){
+        postOrderProducts(i, order_number, res, mysql, context, complete);
+        console.log(`i is : ${i}`)
+      }
+      
+      function complete(){
+        callbackCount ++;
+        if(callbackCount >= callbacks){
+          res.redirect('/order');
+          
         }
-      })
-        });
+      }    
+    });
       
 
    

@@ -1,9 +1,9 @@
-const order = require("../order");
+// const order = require("../order");
 
 var rowNumber;
-console.log(`rowNumber is ${rowNumber}`);
 let lineNumber = 0;
 var customer_context = [];
+
 
 function startOrder(){
     rowNumber = 2;
@@ -24,7 +24,8 @@ function startOrder(){
     document.querySelector('#addFields').classList.remove('hidden');
     document.querySelector('#notesField').classList.remove('hidden');
     document.querySelector('#orderInstructions').classList.add('hidden');
-    
+
+    document.getElementById('order_number_input').value=document.querySelector('#orderNumber').innerHTML;
     document.getElementById('customer_id_input').value = document.querySelector('#customerId').innerHTML;
     document.getElementById('order_date_input').value = document.querySelector('#orderDate').innerHTML;
 }
@@ -33,10 +34,11 @@ function startOrder(){
 function addToOrder(){
     var totalPrice = 0;
     var orderTable = document.querySelector('#orderTable');
+    var productId = document.querySelector('#p-productid').value;
     var year = document.querySelector('#p-modelyear').value;
     var brand = document.querySelector('#p-brandname').value;
     var model = document.querySelector('#p-model').value;
-    var price = parseFloat(document.querySelector('#p-price').value);//.selectedOptions[0].dataset.price
+    var price = parseFloat(document.querySelector('#p-price').value);
     var vehicle = document.querySelector('#selectVehicle').value;
     
     var row = orderTable.insertRow();
@@ -47,12 +49,17 @@ function addToOrder(){
     
     priceCell.classList.add('itemPrice');
     var deleteCell = row.insertCell(4);
+    var productIdCell = row.insertCell(4);
+    productIdCell.classList.add('hidden');
+    productIdCell.classList.add('productId');
     yearCell.innerHTML = year;
     brandCell.innerHTML = brand;
     modelCell.innerHTML = model;
     priceCell.innerHTML = price;
     priceCell.setAttribute('value', price);
     deleteCell.innerHTML = `<div class="btn btn-primary" onclick="deleteThisRow(this)">Delete</div>`;
+    productIdCell.innerHTML = productId;
+    productIdCell.value = productId;
     
     (function calculate(){
         var nodeList = document.querySelectorAll('.itemPrice');
@@ -69,6 +76,15 @@ function addToOrder(){
         total = total + tax;
         document.querySelector('#tax').innerHTML = tax.toFixed(2);
         document.querySelector('#total').innerHTML = total.toFixed(2);
+    })();
+    (function productArray(){
+        var line_items = [];
+        var nodeList = document.querySelectorAll('.productId');
+        for(i of nodeList){
+            line_items.push(parseInt(i.value));
+        }
+        arr = JSON.stringify(line_items);
+        document.getElementById('items_array').value = arr;
     })();
 
     document.getElementById('price_input').value = totalPrice;

@@ -35,38 +35,12 @@
         <select class="form-control" name="vehicle" id="selectVehicle">
           <option>Select Vehicle</option>
           {{#each vehicles}}
-          <option name="{{productid}}" data-modelyear="{{modelyear}}" data-brandname="{{brandname}}" data-model="{{model}}" data-price="{{price}}">{{modelyear}} {{brandname}} {{model}} {{price}}   
+          <option name="{{productid}}" data-productid="{{productid}}" data-modelyear="{{modelyear}}" data-brandname="{{brandname}}" data-model="{{model}}" data-price="{{price}}">{{productid}} {{modelyear}} {{brandname}} {{model}} {{price}}   
           </option>
           {{/each}}
         </select>
       </div>
-      {{!-- <div class="form-group col-sm-6 col-md-4 col-lg-3">
-        <label for="brand">Year</label>
-        <select class="form-control" name="year" id="selectYear">
-          <option>Select Year</option>
-          {{#each years}}
-            <option name="{{modelyear}}">{{modelyear}}</option>
-          {{/each}}
-        </select>
-      </div>
-      <div class="form-group col-sm-6 col-md-4 col-lg-3">
-        <label for="brand">Brand</label>
-        <select class="form-control" name="brand" id="selectBrand">
-          <option>Select Brand</option>
-          {{#each brands}}
-            <option name="{{brandid}}">{{brandname}}</option>
-          {{/each}}
-        </select>
-      </div>
-      <div class="form-group col-sm-6 col-md-4 col-lg-3">
-        <label for="model">Model</label>
-        <select class="form-control" name="model" id="selectModel">
-          <option>Select Model</option>
-          {{#each models}}
-            <option name="{{model}}" data-price="{{price}}">{{model}}</option>
-          {{/each}}
-        </select>
-      </div> --}}
+
     </div>
     <div class="row hidden hideShow" id="notesField">
       <div class="form-group col-sm-6">
@@ -79,6 +53,7 @@
   </form>
 </div>
 <div class="hidden">
+  <div id="p-productid">asdf</div>
   <div id="p-modelyear">asdf</div>
   <div id="p-brandname">asdf</div>
   <div id="p-model">asdf</div>
@@ -130,6 +105,7 @@
       <tr>
         <td id="total" name="total"></td>
         <input type="hidden" id="total_input" name="total" />
+        <input type="hidden" id="items_array" name="items_array"/>
       </tr>
     </table>
   </div>
@@ -143,14 +119,17 @@
 <script>
   
   document.getElementById('selectVehicle').onchange = (event) => {
-  var modelyear = event.target.options[event.target.selectedIndex].dataset.modelyear;
-  var brandname = event.target.options[event.target.selectedIndex].dataset.brandname;
-  var model = event.target.options[event.target.selectedIndex].dataset.model;
-  var price = event.target.options[event.target.selectedIndex].dataset.price;
-  document.getElementById('p-modelyear').value = modelyear;
-  document.getElementById('p-brandname').value = brandname;
-  document.getElementById('p-model').value = model;
-  document.getElementById('p-price').value = price;
-  console.log(`${modelyear} ${brandname} ${model} : ${price}`);
+    var productid = event.target.options[event.target.selectedIndex].dataset.productid; 
+    console.log(`productid is ${productid}`);
+    var modelyear = event.target.options[event.target.selectedIndex].dataset.modelyear;
+    var brandname = event.target.options[event.target.selectedIndex].dataset.brandname;
+    var model = event.target.options[event.target.selectedIndex].dataset.model;
+    var price = event.target.options[event.target.selectedIndex].dataset.price;
+    document.getElementById('p-productid').value = productid;
+    document.getElementById('p-modelyear').value = modelyear;
+    document.getElementById('p-brandname').value = brandname;
+    document.getElementById('p-model').value = model;
+    document.getElementById('p-price').value = price;
+    console.log(`${productid} ${modelyear} ${brandname} ${model} : ${price}`);
 }
 </script>
