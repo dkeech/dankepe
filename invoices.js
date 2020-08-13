@@ -2,12 +2,12 @@ module.exports = function(){
     var express = require('express');
     var router = express.Router();
 
-    var invoicesQuery = 'SELECT o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, p.price, o.tax, o.total ' + 
-      'FROM orders o ' + 
-      'JOIN orders_products op ON op.orderid = o.orderid ' + 
-      'JOIN products p on op.productid = p.productid ' + 
-      'JOIN brands b on p.brandid = b.brandid ' + 
-      'JOIN customers c on c.customerid = o.customerid';
+    var invoicesQuery = 'SELECT o.orderid, c.firstname, c.lastname, o.total ' + 
+    'FROM orders o ' + 
+    'JOIN customers c on c.customerid = o.customerid ';
+
+    var nullinvoices = 'SELECT orderid, total FROM orders where customerid is NULL;'
+
 
     function getInvoices(res, mysql, context, complete){
       mysql.pool.query(invoicesQuery, function(error, results, fields){
@@ -16,13 +16,24 @@ module.exports = function(){
           res.end();
         }
         context.invoices = results;
-        console.log("end of getInvoices");
         complete();
       })
     }
 
+    function getnullInvoices(res, mysql, context, complete){
+      mysql.pool.query(nullinvoices, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.nullinvoices = results;
+        complete();
+      })
+    }
+  
+
     function getInvoice(res, mysql, context, orderid, complete){
-      var sql = 'SELECT o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, p.price, o.tax, o.total ' + 
+      var sql = 'SELECT o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, o.price, o.tax, o.total ' + 
       'FROM orders o ' + 
       'JOIN orders_products op ON op.orderid = o.orderid ' + 
       'JOIN products p on op.productid = p.productid ' + 
@@ -38,15 +49,24 @@ module.exports = function(){
           context.order = results[0];
           complete();
       });
-  }
+    }
 
-    function getCustomers(res, mysql, context, complete){
-      mysql.pool.query('SELECT * FROM customers', function(error, results, fields){
-        if(error){
-          res.write(JSON.stringify(error));
-          res.end();
-        }
-        context.customers = results;
+    function getProductsinOrder(res, mysql, context, orderid, complete){
+      var sql = 'SELECT o.orderid, c.firstname, c.lastname, p.modelyear, b.brandname, p.model, p.price as productprice, o.price, o.tax, o.total ' + 
+      'FROM orders o ' + 
+      'JOIN orders_products op ON op.orderid = o.orderid ' + 
+      'JOIN products p on op.productid = p.productid ' + 
+      'JOIN brands b on p.brandid = b.brandid ' + 
+      'JOIN customers c on c.customerid = o.customerid ' +
+      'WHERE o.orderid = ?';
+      var inserts = [orderid];
+      mysql.pool.query(sql, inserts, function(error, results, fields){
+          if(error){
+              res.write(JSON.stringify(error));
+              res.end();
+          }
+          context.orders = results;
+          complete();
       });
     }
 
@@ -80,16 +100,33 @@ module.exports = function(){
       context.jsscripts = ['searchorders.js', 'deleteorder.js'];
       var mysql = req.app.get('mysql');
       getInvoices(res, mysql, context, complete);
-      
+      getnullInvoices(res, mysql, context, complete);
       function complete(){
         
         callbackCount ++;
         console.log(callbackCount);
-        if(callbackCount >=1){
+        if(callbackCount >=2){
+          console.log(context)
         res.render('invoices', context)
         }
       }
     });
+
+    router.get('/view/:orderid', function(req, res){
+      callbackCount = 0;
+      var context = {};
+      var mysql = req.app.get('mysql');
+      getProductsinOrder(res, mysql, context, req.params.orderid, complete);
+      function complete(){
+          callbackCount++;
+          if(callbackCount >= 1){
+              console.log(context)
+              res.render('orderproducts', context);
+          }
+
+      }
+    });
+
 
     router.get('/search/:s', function(req, res){
       var callbackCount = 0;
@@ -169,7 +206,7 @@ module.exports = function(){
     router.put('/null/:orderid', function(req, res){
       var mysql = req.app.get('mysql');
       var inserts = [req.body.price, req.body.tax, req.body.total, req.params.orderid];
-      var sql = 'UPDATE orders SET customerid="NULL", price=?, tax=?, total=? WHERE orderid=?';
+      var sql = 'UPDATE orders SET customerid=NULL, price=?, tax=?, total=? WHERE orderid=?';
       sql = mysql.pool.query(sql,inserts,function(error, results, fields){
           if(error){
               console.log(error)
