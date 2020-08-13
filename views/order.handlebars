@@ -33,7 +33,7 @@
       <div class="form-group col-sm-6">
         <label for="vehicle">Vehicle</label>
         <select class="form-control" name="vehicle" id="selectVehicle">
-          <option>Select Vehicle</option>
+          <option disabled selected>Select Vehicle</option>
           {{#each vehicles}}
           <option name="{{productid}}" data-productid="{{productid}}" data-modelyear="{{modelyear}}" data-brandname="{{brandname}}" data-model="{{model}}" data-price="{{price}}">{{productid}} {{modelyear}} {{brandname}} {{model}} {{price}}   
           </option>

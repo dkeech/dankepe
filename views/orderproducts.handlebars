@@ -1,0 +1,39 @@
+
+<H2> Order {{orders.0.orderid}} for {{orders.0.lastname}}, {{orders.0.firstname}}</H2>
+
+<table>
+    <thead>
+        <tr>
+            <td>Year</td>
+            <td>Brand</td>
+            <td>Model</td>
+            <td>Price</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#each orders}}
+        <tr>
+            <td>{{this.modelyear}}</td>
+            <td>{{this.brandname}}</td>
+            <td>{{this.model}}</td>
+            <td>{{this.productprice}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Product Total:</td>
+            <td>{{orders.0.price}}</td>
+            <td> Tax: {{orders.0.tax}}</td>
+            <td> Grand Total {{orders.0.total}}</td>
+        </tr>
+    </tbody>
+
+</table>
