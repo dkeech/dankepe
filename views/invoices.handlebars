@@ -23,12 +23,32 @@
           
           <td><button class="btn btn-primary" onclick="deleteOrder({{orderid}})">Delete</button></td>
           <td><a href="/invoices/{{orderid}}">Update</a></td>
-                    <!-- Button trigger modal -->
           <td><a href="/invoices/view/{{orderid}}">View Order</a></td>    
 
         </tr>
 
-        {{/each}}
+      {{/each}}
+
+
+        <tr>
+          <th>Order #</th>
+          <th>All Orders Below Are Null</th>
+          <th>Total</th>
+        </tr>
+
+    {{#each nullinvoices}}
+        <tr>
+          <td>{{orderid}}</td>
+          <td></td>
+          <td  class="money">{{total}}</td>
+          
+          <td><button class="btn btn-primary" onclick="deleteOrder({{orderid}})">Delete</button></td>
+          <td><a href="/invoices/{{orderid}}">Update</a></td>
+          <td><a href="/invoices/view/{{orderid}}">View Order</a></td>    
+
+        </tr>
+
+    {{/each}}
         <script>
           function searchOrdersByName() {
           console.log("searchOrdersByName()");
